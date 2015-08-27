@@ -80,6 +80,8 @@ node 'web-01', 'web-02', 'web-03' {
     status_path     => '/server-status',
   }
 
+  $webhost = $::hostname
+
   file { '/var/www/html/index.html':
     content => template('web/index.html.erb'),
     mode => '0444',
