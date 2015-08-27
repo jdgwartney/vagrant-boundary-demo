@@ -109,6 +109,38 @@ node 'web-01', 'web-02', 'web-03' {
 
 }
 
+node 'db-01', 'db-02' {
+#  exec { 'update-rpm-packages':
+#    command => '/usr/bin/yum update -y',
+#  }
+
+  package {'epel-release':
+    ensure => 'installed',
+#    require => Exec['update-rpm-packages']
+  }
+
+  class { '::mysql::server':
+    root_password => 'root123',
+  }
+
+  class { '::mysql::server::monitor':
+    mysql_monitor_username => 'monitor',
+    mysql_monitor_password => 'monitor123',
+    mysql_monitor_hostname => '127.0.0.1',
+  }
+
+  package { 'stress':
+    ensure => 'installed',
+    require => Package['epel-release']
+  }
+
+  package { 'sysstat':
+    ensure => 'installed',
+    require => Package['epel-release']
+  }
+
+}
+
 node 'monitor-01' {
 
 #  exec { 'update-rpm-packages':
@@ -125,10 +157,38 @@ node 'monitor-01' {
   }
 
   host { 'web-01':
-     comment => 'Test SNMP server #1',
+     comment => 'Web Server #1',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.11',
+     ensure => 'present'
+  }
+  host { 'web-02':
+     comment => 'Web Server #2',
+     target => '/etc/hosts',
+     host_aliases => [],
+     ip => '192.168.50.12',
+     ensure => 'present'
+  }
+  host { 'web-03':
+     comment => 'Web Server #3',
+     target => '/etc/hosts',
+     host_aliases => [],
+     ip => '192.168.50.13',
+     ensure => 'present'
+  }
+  host { 'db-01':
+     comment => 'Database Server #1',
+     target => '/etc/hosts',
+     host_aliases => [],
+     ip => '192.168.50.31',
+     ensure => 'present'
+  }
+  host { 'db-02':
+     comment => 'Database Server #2',
+     target => '/etc/hosts',
+     host_aliases => [],
+     ip => '192.168.50.32',
      ensure => 'present'
   }
 

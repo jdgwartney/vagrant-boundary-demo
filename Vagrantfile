@@ -19,7 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.vm.box = BOX_NAME
     v.vm.hostname = "web-01"
     v.vm.network "private_network", ip: "192.168.50.11"
-    v.vm.network "forwarded_port", guest: 80, host: 8011
+#    v.vm.network "forwarded_port", guest: 80, host: 8011
   end
 
   config.vm.define "web-02", autostart: false do |v|
@@ -31,7 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "web-03", autostart: false do |v|
     v.vm.box = BOX_NAME
     v.vm.hostname = "web-03"
-    v.vm.network "private_network", ip: "192.168.50.12"
+    v.vm.network "private_network", ip: "192.168.50.13"
   end
 
   config.vm.define "dash-01", autostart: false do |v|
@@ -65,7 +65,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell do |shell|
      shell.inline = "puppet module install puppetlabs-stdlib;
                      puppet module install puppetlabs-apache;
-		     puppet module install puppetlabs-firewall
+		     puppet module install puppetlabs-firewall;
+                     puppet module install puppetlabs-mysql;
                      puppet module install boundary-boundary;
                      exit 0"
   end
