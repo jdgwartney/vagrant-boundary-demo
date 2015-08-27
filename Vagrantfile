@@ -19,6 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.vm.box = BOX_NAME
     v.vm.hostname = "web-01"
     v.vm.network "private_network", ip: "192.168.50.11"
+    v.vm.network "forwarded_port", guest: 80, host: 8011
   end
 
   config.vm.define "web-02", autostart: false do |v|
