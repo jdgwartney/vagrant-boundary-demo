@@ -51,12 +51,26 @@ $ vagrant halt <virtual machine name>
 ```
 $ vagrant destroy <virtual machine name>
 ```
+## Plugin Installation and Configuration
+
+### Web Servers
+1. Start virtual machines
+```
+$ BOUNDARY_API_TOKEN=<api token> vagrant up web-01 --provider virtualbox
+```
+2. Deploy Apache plugin on each of the web servers
+
+### Database Servers
+```
+$ BOUNDARY_API_TOKEN=<api token> vagrant up db-01 db-02 --provider virtualbox
+```
+2. Deploy MySQL plugin on each of the database servers
 
 ### Monitoring Server
 
 1. Start virtual machine
 ```
-$ vagrant up monitor-01 --provider virtualbox
+$ BOUNDARY_API_TOKEN=<api token> vagrant up monitor-01 --provider virtualbox
 ```
 2. Deploy httpcheck plugin
 3. Configure check of web-01
