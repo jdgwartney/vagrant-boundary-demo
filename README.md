@@ -1,9 +1,9 @@
-# Boundary Vagrant Environment for Plugin Development
+# Vagrant Environment for Boundary Demo
 
-Provides virtual machines to develop and test Boundary meter plugins.
+Provides virtual machines targets for a Boundary Demo
 
 ## Prerequisites
-
+- Git 1.7 or later, [here](http://git-scm.com/download)
 - Vagrant 1.7.2 or later. Vagrant can be downloaded [here](https://www.vagrantup.com/downloads.html)
 - VirtualBox 4.3.2.6 or later. VirtualBox can be downloaded [here](https://www.virtualbox.org/wiki/Downloads)
 
@@ -17,21 +17,18 @@ The Boundary meter is installed on each of the virtual machines via the [Boundar
 
 The table below provides the mapping of platform to virtual machine name that is used later to start a virtual machine for testing plugins.
 
-| Platform             | Virtual Machine Name  | Notes |
-|:---------------------|:---------------------:|:-----:|
-|Centos 5.11           |`centos-5.11`          |       |
-|Centos 6.6            |`centos-6.6`           |       |
-|Centos 7.0            |`centos-7.0`           |       |
-|Centos 7.1            |`centos-7.1`           |       |
-|Ubuntu 12.04          |`ubuntu-12.04`         |       |
-|Ubuntu 14.04          |`ubuntu-14.04`         |       |
-|Windows Server 2008 R2|`win-serv-2008-r2`     |       |
-|Windows Server 2012 R2|`win-serv-2012-r2`     |       |
-
+| Role             | Virtual Machine Name | Notes |
+|:-----------------|:--------------------:|:-----:|
+|Web Server #1     |`web-01`              |       |
+|Web Server #2     |`web-02`              |       |
+|Web Server #3     |`web-03`              |       |
+|Database Server #1|`db-01`               |       |
+|Database Server #2|`db-02`               |       |
+|Monitor Server #1 |`monitor-01`          |       |
 
 ### Starting a Virtual Machine
 
-With the Boundary api token perform the following:
+With the Boundary API token perform the following:
 
 1. Either checkout or clone the git repository ()[]
 2. Issue the following command, the target platforms are listed in the table below:
@@ -74,4 +71,6 @@ $ BOUNDARY_API_TOKEN=<api token> vagrant up monitor-01 --provider virtualbox
 ```
 2. Deploy httpcheck plugin
 3. Configure check of web-01
+4. Configure check of web-02
+5. Configure check of web-03
 
