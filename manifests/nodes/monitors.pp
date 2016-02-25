@@ -6,7 +6,7 @@ node 'monitor-01' {
   }
 
   class { 'boundary':
-      token => $boundary_api_token,
+      token => $api_token,
   }
 
   exec { 'update-rpm-packages':

@@ -49,6 +49,12 @@ Package {
 #}
 
 #class { ['my_fw::pre', 'my_fw::post']: }
+#
+#
+#
+#exec { 'update-packages':
+#    command => '/usr/bin/yum update -y',
+#}
 
 file { 'bash_profile':
   path    => '/home/vagrant/.bash_profile',
@@ -57,10 +63,10 @@ file { 'bash_profile':
 }
 
 class { 'boundary':
-    token => $boundary_api_token,
+    token => $api_token
 }
 
-node 'web-01', 'web-02', 'web-03' {
+node /^web/ {
 
   service { "iptables":
     ensure => "stopped",
@@ -109,15 +115,7 @@ node 'web-01', 'web-02', 'web-03' {
 
 }
 
-node 'db-01', 'db-02' {
-#  exec { 'update-rpm-packages':
-#    command => '/usr/bin/yum update -y',
-#  }
-
-  package {'epel-release':
-    ensure => 'installed',
-#    require => Exec['update-rpm-packages']
-  }
+node /^dbm/, /^dbs/ {
 
   class { '::mysql::server':
     root_password => 'root123',
@@ -141,56 +139,59 @@ node 'db-01', 'db-02' {
 
 }
 
-node 'monitor-01' {
-
-#  exec { 'update-rpm-packages':
-#    command => '/usr/bin/yum update -y',
-#  }
-
-  package {'epel-release':
-    ensure => 'installed',
-#    require => Exec['update-rpm-packages']
-  }
+node /^mon/ {
 
   package {'nmap':
     ensure => 'installed'
   }
 
-  host { 'web-01':
+  host { 'web-1':
      comment => 'Web Server #1',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.11',
      ensure => 'present'
   }
-  host { 'web-02':
+  host { 'web-2':
      comment => 'Web Server #2',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.12',
      ensure => 'present'
   }
-  host { 'web-03':
+  host { 'web-3':
      comment => 'Web Server #3',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.13',
      ensure => 'present'
   }
-  host { 'db-01':
+  host { 'dbm-1':
      comment => 'Database Server #1',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.31',
      ensure => 'present'
   }
-  host { 'db-02':
+  host { 'dbm-2':
      comment => 'Database Server #2',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.32',
      ensure => 'present'
   }
-
-
+  host { 'dbs-1':
+     comment => 'Database Server #1',
+     target => '/etc/hosts',
+     host_aliases => [],
+     ip => '192.168.50.31',
+     ensure => 'present'
+  }
+  host { 'dbs-2':
+     comment => 'Database Server #2',
+     target => '/etc/hosts',
+     host_aliases => [],
+     ip => '192.168.50.32',
+     ensure => 'present'
+  }
 }

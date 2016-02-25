@@ -1,9 +1,6 @@
-# Explictly set to avoid warning message
-
-
 node 'web-01', 'web-02', 'web-03' {
   class { 'boundary':
-    token => $boundary_api_token,
+    token => $api_token,
   }
 
   file { 'bash_profile':
