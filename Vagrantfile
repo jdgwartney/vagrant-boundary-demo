@@ -9,8 +9,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Configure VirtualBox Provider
   #
   config.vm.provider "virtualbox" do |v|
+      v.linked_clone = true if Vagrant::VERSION =~ /^1.8/
       v.memory = 1024
-      v.cpus = 2
+      v.cpus = 1
+  end
+
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
   end
 
   BOX_NAME = "puppetlabs/centos-6.6-64-puppet"
@@ -53,7 +58,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "dbm-2", autostart: false do |v|
     v.vm.box = BOX_NAME
-    v.vm.hostname = "db-2"
+    v.vm.hostname = "dbm-2"
     v.vm.box_version = "1.0.1"
     v.vm.network "private_network", ip: "192.168.100.32"
   end
@@ -67,21 +72,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "dbs-2", autostart: false do |v|
     v.vm.box = BOX_NAME
-    v.vm.hostname = "db-slave-02"
+    v.vm.hostname = "dbs-2"
     v.vm.box_version = "1.0.1"
     v.vm.network "private_network", ip: "192.168.100.34"
   end
 
   config.vm.define "ns-1", autostart: false do |v|
     v.vm.box = BOX_NAME
-    v.vm.hostname = "ns-01"
+    v.vm.hostname = "ns-1"
     v.vm.box_version = "1.0.1"
     v.vm.network "private_network", ip: "192.168.100.51"
   end
 
   config.vm.define "ns-2", autostart: false do |v|
     v.vm.box = BOX_NAME
-    v.vm.hostname = "ns-02"
+    v.vm.hostname = "ns-2"
     v.vm.box_version = "1.0.1"
     v.vm.network "private_network", ip: "192.168.100.14"
   end
@@ -109,7 +114,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                      puppet module install puppetlabs-apache;
 		     puppet module install puppetlabs-firewall;
                      puppet module install puppetlabs-mysql;
+                     puppet module install thias-bind;
                      puppet module install boundary-boundary;
+		     touch /etc/puppet/hiera.yaml;
                      exit 0"
   end
 
