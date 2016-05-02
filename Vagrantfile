@@ -125,12 +125,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # on a single box
   #
   config.vm.provision "puppet" do |puppet|
-    puppet.manifests_path = "manifests"
-    puppet.manifest_file  = "site.pp"
-    puppet.module_path = "manifests/modules"
+    puppet.environment_path = "environments"
+    puppet.environment = "demo"
+    puppet.options = "--verbose --debug"
     puppet.facter = {
-      "api_token" => ENV["API_TOKEN"]
+      "api_token" => ENV["TSP_API_TOKEN"]
     }
   end
-
 end

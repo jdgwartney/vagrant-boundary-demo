@@ -3,64 +3,10 @@ Package {
   allow_virtual => false,
 }
 
-#resources { 'firewall':
-#  purge => true,
-#}
-
-#class my_fw::pre {
-#    Firewall {
-#      require => undef,
-#    }
-#     # Default firewall rules
-#    firewall { '000 accept all icmp':
-#      proto  => 'icmp',
-#      action => 'accept',
-#    }
-#    firewall { '001 accept all to lo interface':
-#      proto   => 'all',
-#      iniface => 'lo',
-#      action  => 'accept',
-#    }
-#    firewall { '002 reject local traffic not on loopback interface':
-#      iniface     => '! lo',
-#      proto       => 'all',
-#      destination => '127.0.0.1/8',
-#      action      => 'reject',
-#    }
-#    firewall { '003 accept related established rules':
-#      proto  => 'all',
-#      state  => ['RELATED', 'ESTABLISHED'],
-#      action => 'accept',
-#    }
-#  }
-
-#class my_fw::post {
-#  firewall { '999 drop all':
-#    proto  => 'all',
-#    action => 'drop',
-#    before => undef,
-#  }
-#}
-
-
-#Firewall {
-#  before  => Class['my_fw::post'],
-#  require => Class['my_fw::pre'],
-#}
-
-#class { ['my_fw::pre', 'my_fw::post']: }
-#
-#
-#
-#exec { 'update-packages':
-#    command => '/usr/bin/yum update -y',
-#    timeout => 0,
-#}
-
 file { 'bash_profile':
   path    => '/home/vagrant/.bash_profile',
   ensure  => file,
-  source  => '/vagrant/manifests/bash_profile'
+  content => file('bash/bash_profile'),
 }
 
 class { 'boundary':
@@ -72,11 +18,10 @@ node /^web/ {
   service { "iptables":
     ensure => "stopped",
   }
+
   service { "ip6tables":
     ensure => "stopped",
   }
-
-#  class { 'firewall': }
 
   class {'apache':
   }
@@ -95,13 +40,8 @@ node /^web/ {
     require => Class['apache']
   }
 
-#  exec { 'update-rpm-packages':
-#    command => '/usr/bin/yum update -y',
-#  }
-
   package {'epel-release':
     ensure => 'installed',
-#    require => Exec['update-rpm-packages']
   }
 
   package { 'stress':
