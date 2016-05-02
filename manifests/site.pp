@@ -54,6 +54,7 @@ Package {
 #
 #exec { 'update-packages':
 #    command => '/usr/bin/yum update -y',
+#    timeout => 0,
 #}
 
 file { 'bash_profile':
@@ -117,6 +118,10 @@ node /^web/ {
 
 node /^dbm/, /^dbs/ {
 
+  package {'epel-release':
+    ensure => 'installed',
+  }
+
   class { '::mysql::server':
     root_password => 'root123',
   }
@@ -135,6 +140,32 @@ node /^dbm/, /^dbs/ {
   package { 'sysstat':
     ensure => 'installed',
     require => Package['epel-release']
+  }
+
+}
+
+node /^ns/ {
+
+  package {'epel-release':
+    ensure => 'installed',
+  }
+
+  package { 'stress':
+    ensure => 'installed',
+    require => Package['epel-release']
+  }
+
+  package { 'sysstat':
+    ensure => 'installed',
+    require => Package['epel-release']
+  }
+
+  include bind
+  bind::server::conf { '/etc/named.conf':
+    listen_on_addr    => [ 'any' ],
+    listen_on_v6_addr => [ 'any' ],
+    forwarders        => [ '8.8.8.8', '8.8.4.4' ],
+    allow_query       => [ 'localnets' ],
   }
 
 }
