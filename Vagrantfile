@@ -81,14 +81,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.vm.box = BOX_NAME
     v.vm.hostname = "ns-1"
     v.vm.box_version = "1.0.1"
-    v.vm.network "private_network", ip: "192.168.100.51"
+    v.vm.network "private_network", ip: "192.168.100.101"
   end
 
   config.vm.define "ns-2", autostart: false do |v|
     v.vm.box = BOX_NAME
     v.vm.hostname = "ns-2"
     v.vm.box_version = "1.0.1"
-    v.vm.network "private_network", ip: "192.168.100.14"
+    v.vm.network "private_network", ip: "192.168.100.102"
   end
 
   config.vm.define "mon-1", autostart: false do |v|
@@ -102,7 +102,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.vm.box = BOX_NAME
     v.vm.hostname = "install-1"
     v.vm.box_version = "1.0.1"
-    v.vm.network "private_network", ip: "192.168.100.101"
+    v.vm.network "private_network", ip: "192.168.100.201"
   end
 
   #

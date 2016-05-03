@@ -10,7 +10,7 @@ file { 'bash_profile':
 }
 
 class { 'boundary':
-    token => $api_token
+    token => $api_token,
 }
 
 node /^web/ {
@@ -108,6 +108,14 @@ node /^ns/ {
     allow_query       => [ 'localnets' ],
   }
 
+  service { "iptables":
+    ensure => "stopped",
+  }
+
+  service { "ip6tables":
+    ensure => "stopped",
+  }
+
 }
 
 node /^mon/ {
@@ -116,53 +124,75 @@ node /^mon/ {
     ensure => 'installed'
   }
 
+  import "resolver"
+
+  resolv_conf { "example":
+    domainname  => "mydomain",
+    searchpath  => ['mydomain', 'test.mydomain'],
+    nameservers => ['192.168.1.101', '192.168.1.102'],
+  }
+
+  host { 'ns-1':
+     comment => 'Name Server #1',
+     target => '/etc/hosts',
+     host_aliases => [],
+     ip => '192.168.50.101',
+  }
+
+  host { 'ns-2':
+     comment => 'Name Server #2',
+     target => '/etc/hosts',
+     host_aliases => [],
+     ip => '192.168.50.102',
+  }
+
   host { 'web-1':
      comment => 'Web Server #1',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.11',
-     ensure => 'present'
   }
+
   host { 'web-2':
      comment => 'Web Server #2',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.12',
-     ensure => 'present'
   }
+
   host { 'web-3':
      comment => 'Web Server #3',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.13',
-     ensure => 'present'
   }
+
   host { 'dbm-1':
      comment => 'Database Server #1',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.31',
-     ensure => 'present'
   }
+
   host { 'dbm-2':
      comment => 'Database Server #2',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.32',
-     ensure => 'present'
   }
+
   host { 'dbs-1':
      comment => 'Database Server #1',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.31',
-     ensure => 'present'
   }
+
   host { 'dbs-2':
      comment => 'Database Server #2',
      target => '/etc/hosts',
      host_aliases => [],
      ip => '192.168.50.32',
-     ensure => 'present'
   }
+
 }
